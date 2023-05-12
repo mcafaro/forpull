@@ -1,0 +1,19 @@
+name: test
+on:
+  pull_request_target:
+        types: [labeled]
+
+jobs:
+  build:
+    name: Do Test
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'safe to test')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          ref: "refs/pull/${{ github.event.number }}/merge" # THIS IS INSECURE
+      - name: Run a one-line script
+        run: echo $MY_SECRET
+        env:
+          MY_SECRET: ${{ secrets.MY_SECRET }}
